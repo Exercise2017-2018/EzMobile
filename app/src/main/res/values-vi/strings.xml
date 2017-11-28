@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tong_quan_thi_truong">Tổng quan thị trường</string>
+    <string name="bang_gia">Bảng giá</string>
+    <string name="ma_so_tang_giam">Mã số Tăng/Giảm:</string>
+    <string name="thoa_thuan">Thỏa thuận:</string>
+
+    <string name="gt"><![CDATA[GT: %1$S tỷ]]></string>
+    <string name="sl"><![CDATA[SL: %1$S]]></string>
+    <string name="index">Chỉ số</string>
+    <string name="change">Thay đổi</string>
+    <string name="percent">Thay đổi%</string>
+    <string name="values">Giá trị</string>
+    <string name="Price">Giá</string>
+    <string name="search_id_securities">Tìm kiếm mã chứng khoán</string>
+    <string name="num">Số lượng</string>
+</resources>

@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">EzMobile</string>
+    <string name="tong_quan_thi_truong">Tổng quan thị trường</string>
+    <string name="bang_gia">Bảng giá</string>
+    <string name="ma_so_tang_giam">Mã số Tăng/Giảm:</string>
+    <string name="thoa_thuan">Thỏa thuận:</string>
+
+    <string name="up"><![CDATA[<font color="#47b53c">(▲%1$s %2$s)</font>]]></string>
+    <string name="average"><![CDATA[<font color="#ff7a21">(■%1$1s %2$s)</font>]]></string>
+    <string name="down"><![CDATA[<font color="#df403a">(▼%1$s %2$s) </font>]]></string>
+
+    <string name="up_down"><![CDATA[<font color="#47b53c">▲%1$s </font><font color="#ff7a21"> ■%2$s </font><font color="#df403a" size=2>▼%3$s</font>]]></string>
+
+    <string name="gt"><![CDATA[GT: %1$S bil]]></string>
+    <string name="sl"><![CDATA[SL: %1$S]]></string>
+    <string name="index">Index</string>
+    <string name="Price">Price</string>
+    <string name="change">Change</string>
+    <string name="percent">Change%</string>
+    <string name="values">Values</string>
+    <string name="search_id_securities">Search id securities</string>
+    <string name="num">Number</string>
+</resources>

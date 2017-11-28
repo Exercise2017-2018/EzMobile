@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:maxLines="1"
+            android:minHeight="15dp"
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:text="VNIndex"
+            android:textColor="#1496c8"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.2"
+            android:ellipsize="end"
+            android:gravity="center|right"
+            android:maxLines="1"
+            android:minHeight="15dp"
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:text="993453459"
+            android:textColor="#4db748"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/change"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center|right"
+            android:maxLines="1"
+            android:minHeight="15dp"
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:text="12"
+            android:textColor="#4db748"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/values"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1.2"
+            android:ellipsize="end"
+            android:gravity="center|right"
+            android:maxLines="1"
+            android:minHeight="15dp"
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:text="43542.232"
+            android:textColor="#2c3e50"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <include layout="@layout/item_divider_layout" />
+</LinearLayout>
