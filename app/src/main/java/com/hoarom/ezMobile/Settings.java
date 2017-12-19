@@ -25,4 +25,12 @@ public class Settings {
     public static String STRING_COMPANY_NAME = "STRING_COMPANY_NAME";
 
     public static int SEARCH_ID_SERCURITIES = 100;
+
+    //------------------------------------------
+    public static int TYPE_CONVERT_TO_QUOTE = 1;
+
+    public static int TYPE_CONVERT_TO_QUOTE_DETAIL = 2;
+
+
+
 }

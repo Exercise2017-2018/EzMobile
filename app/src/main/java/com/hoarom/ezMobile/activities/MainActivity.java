@@ -1,48 +1,60 @@
 package com.hoarom.ezMobile.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hoarom.ezMobile.R;
-import com.hoarom.ezMobile.adapter.CompanyAdapter;
-import com.hoarom.ezMobile.interfaces.IDownload;
-import com.hoarom.ezMobile.model.Company;
+import com.hoarom.ezMobile.adapter.QuoteAdapter;
+import com.hoarom.ezMobile.asyncTasks.JsonTask;
+import com.hoarom.ezMobile.interfaces.IModel;
+import com.hoarom.ezMobile.interfaces.JsonTaskListener;
+import com.hoarom.ezMobile.model.Quote;
+import com.hoarom.ezMobile.model.QuoteDetail;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.hoarom.ezMobile.Manager.DECIMAL_FORMAT_NUM;
 import static com.hoarom.ezMobile.Manager.TIME_DELAY_AUTO_LOAD;
 import static com.hoarom.ezMobile.Manager.convertStringToCompany;
-import static com.hoarom.ezMobile.Manager.isOnline;
+import static com.hoarom.ezMobile.Manager.convertStringToQuoteDetail;
 import static com.hoarom.ezMobile.Settings.SEARCH_ID_SERCURITIES;
 import static com.hoarom.ezMobile.api.api.APIS;
+import static com.hoarom.ezMobile.api.api.API_LIST_QUOTE_DETAIL;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     RecyclerView recyclerView;
-    CompanyAdapter _adapter;
+    RecyclerView recyclerView_cost;
 
-    List<Company> _companies = new ArrayList<>();
+    QuoteAdapter _adapter;
+    QuoteAdapter _quoteItemAdapter;
 
-    List<Company> _companies_temp = new ArrayList<>();
+    List<IModel> _quotes = new ArrayList<>();
+
+    List<IModel> _quotes_temp = new ArrayList<>();
+
+    List<IModel> _quote_item = new ArrayList<>();
 
     LayoutInflater _inflater;
     TextView _textView_change;
@@ -54,13 +66,13 @@ public class MainActivity extends AppCompatActivity {
     Handler _handler = new Handler();
 
     int _index = 0;//count list company download success
-    IDownload _iDownload = new IDownload() {
+    JsonTaskListener _iListenner = new JsonTaskListener() {
         @Override
         public void onSuccess(String data) {
-            Log.w("onSuccess", data + " " + _index);
+            Log.w("MainActivity", "onSuccess: " + _index);
 
-            if (_companies_temp.size() < APIS.size()) {
-                _companies_temp.add(convertStringToCompany(data, _index++));
+            if (_quotes_temp.size() < APIS.size()) {
+                _quotes_temp.add(convertStringToCompany(data, _index++));
             }
             if (_index == APIS.size()) {
                 updateUI();
@@ -70,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onError() {
             //do something
-            Log.w("onError", "" + _index);
+            Log.w("MainActivity", "onError: " + _index);
             if (_index == APIS.size()) {
                 updateUI();
             }
@@ -81,27 +93,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         createView();
 
         getData();
 
         updateUI();
+
+
     }
 
     public void clearData() {
         _index = 0;
-        if (!_companies.isEmpty()) {
-            _companies.clear();
+        if (!_quotes.isEmpty()) {
+            _quotes.clear();
         }
-        if (!_companies_temp.isEmpty()) {
-            _companies_temp.clear();
+        if (!_quotes_temp.isEmpty()) {
+            _quotes_temp.clear();
         }
     }
 
     private void getData() {
         //COMPANIES
-        Log.w("getData", "getda");
+        Log.w("MainActivity", "getData: ");
         _index = 0;
         for (int i = 0; i < APIS.size(); i++) {
             final int finalI = i;
@@ -109,18 +135,48 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     clearData();
-                    new JsonTask().execute(APIS.get(finalI));
-                    _handler.postDelayed(this, TIME_DELAY_AUTO_LOAD * 10);
+                    (new JsonTask(_iListenner)).execute(APIS.get(finalI));
+                    _handler.postDelayed(this, TIME_DELAY_AUTO_LOAD * 1000000);
                 }
             };
             _handler.post(timedTask);
         }
+
+        //BẢNG GIÁ
+
+        final String stringQuote = readFile("quote.txt");
+        Log.w("MainActivity", "onCreate: " + stringQuote);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                (new JsonTask(new JsonTask.TaskListener() {
+                    @Override
+                    public void onSuccess(String data) {
+                        //convert data to QuoteDetail
+                        List<QuoteDetail> list = convertStringToQuoteDetail(data);
+                        for (int i = 0; i < list.size(); i++) {
+                            _quote_item.add((IModel) list.get(i));
+                        }
+
+                        updateUI_Cost();
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                })).execute(API_LIST_QUOTE_DETAIL + stringQuote);
+
+                _handler.postDelayed(this, TIME_DELAY_AUTO_LOAD * 100000);
+            }
+        };
+        _handler.post(runnable);
     }
 
     private void createView() {
         _inflater = this.getLayoutInflater();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_market);
 
         _textView_change = (TextView) findViewById(R.id.change);
         _textView_change.setOnClickListener(onClick_headerTable);
@@ -137,6 +193,13 @@ public class MainActivity extends AppCompatActivity {
         _textView_change.setText(R.string.change);
         _textView_values.setText(R.string.values);
 
+        //phần bản giá
+        recyclerView_cost = findViewById(R.id.recycler_view_price);
+        LinearLayout linearLayout_title_cost = findViewById(R.id.linearlayout_title_cost);
+        //thay đổi
+        ((TextView) linearLayout_title_cost.findViewById(R.id.change)).setText(getString(R.string.change));
+        //số lượng
+        ((TextView) linearLayout_title_cost.findViewById(R.id.values)).setText(getString(R.string.quantity));
     }
 
     private void updateUI() {
@@ -145,19 +208,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-
-                Log.w("run", _companies.size() + "  " + _companies_temp.size());
-                if (_companies.size() == 0 || (_companies.size() < _companies_temp.size())) {
-                    Log.w("run", _companies.size() + " -- " + _companies_temp.size());
-                    if (!_companies.isEmpty()) {
-                        _companies.clear();
+                Log.w("MainActivity", _quotes.size() + "  " + _quotes_temp.size());
+                if (_quotes.size() == 0 || (_quotes.size() < _quotes_temp.size())) {
+                    Log.w("run", _quotes.size() + " -- " + _quotes_temp.size());
+                    if (!_quotes.isEmpty()) {
+                        _quotes.clear();
                     }
-                    for (Company com : _companies_temp) {
-                        _companies.add(com);
+                    for (IModel com : _quotes_temp) {
+                        _quotes.add(com);
                     }
 
-                    _adapter = new CompanyAdapter(_companies_temp, MainActivity.this);
+                    _adapter = new QuoteAdapter();
                     recyclerView.setAdapter(_adapter);
+                    _adapter.addAll(_quotes);
 
                     _adapter.notifyDataSetChanged();
                     LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this);
@@ -167,6 +230,28 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                 }
+            }
+        });
+    }
+
+    private void updateUI_Cost() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.w("MainActivity", "run: " + _quote_item.size());
+                _quoteItemAdapter = new QuoteAdapter();//_quote_item, MainActivity.this
+                _quoteItemAdapter.addAll(_quote_item);
+                recyclerView_cost.setAdapter(_quoteItemAdapter);
+
+                _quoteItemAdapter.notifyDataSetChanged();
+                LinearLayoutManager manager = new LinearLayoutManager(MainActivity.this);
+                manager.setOrientation(LinearLayoutManager.VERTICAL);
+
+                ViewGroup.LayoutParams params = recyclerView_cost.getLayoutParams();
+                params.height = _quote_item.size() * 70;
+                recyclerView_cost.setLayoutParams(params);
+
+                recyclerView_cost.setLayoutManager(manager);
             }
         });
     }
@@ -203,18 +288,19 @@ public class MainActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.change:
                     //thay đổi % và tỷ số
-                    for (int i = 0; i < _companies.size(); i++) {
+                    for (int i = 0; i < _quotes.size(); i++) {
                         View itemView = recyclerView.getChildAt(i);
+                        Quote quote = (Quote) _quotes.get(i);
                         if (itemView == null) {
                             continue;
                         }
                         TextView change = (TextView) itemView.findViewById(R.id.change);
                         if (isChange) {
                             _textView_change.setText(R.string.percent);
-                            change.setText(_companies.get(i).getPercent() == null ? 0 + "" : _companies.get(i).getPercent() + "");
+                            change.setText(quote.getPercent() == null ? 0 + "" : quote.getPercent() + "");
                         } else {
                             _textView_change.setText(R.string.change);
-                            change.setText(_companies.get(i).getChange() == null ? 0 + "" : _companies.get(i).getChange() + "");
+                            change.setText(quote.getChange() == null ? 0 + "" : quote.getChange() + "");
                         }
 //                        _adapter.notifyItemChanged(i);
                     }
@@ -222,20 +308,21 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.values:
                     //thay đổi giá trị và khối lượng
-                    for (int i = 0; i < _companies.size(); i++) {
+                    for (int i = 0; i < _quotes.size(); i++) {
+                        Quote quote = (Quote) _quotes.get(i);
                         View view = recyclerView.getChildAt(i);
                         if (view == null)
                             continue;
-                        TextView values = (TextView) view.findViewById(R.id.values);
+                        TextView values = view.findViewById(R.id.values);
                         if (isValues) {
-                            _textView_values.setText(R.string.num);
-                            Log.w("companies", _companies.get(i).getNum() + "");
-                            values.setText(_companies.get(i).getNum() == null || _companies.get(i).getNum().equals(0)
-                                    ? "0" : DECIMAL_FORMAT_NUM.format(Double.parseDouble(_companies.get(i).getNum())));
+                            _textView_values.setText(R.string.quantity);
+                            Log.w("companies", quote.getNum() + "");
+                            values.setText(quote.getNum() == null || quote.getNum().equals(0)
+                                    ? "0" : DECIMAL_FORMAT_NUM.format(Double.parseDouble(quote.getNum())));
                         } else {
                             _textView_values.setText(R.string.values);
-                            values.setText(_companies.get(i).getValues() == null || _companies.get(i).getValues().equals(0)
-                                    ? "0" : DECIMAL_FORMAT_NUM.format(Double.parseDouble(_companies.get(i).getValues())));
+                            values.setText(quote.getValues() == null || quote.getValues().equals(0)
+                                    ? "0" : DECIMAL_FORMAT_NUM.format(Double.parseDouble(quote.getValues())));
                         }
                     }
                     isValues = !isValues;
@@ -243,7 +330,6 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     break;
             }
-
         }
     };
 
@@ -258,58 +344,65 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class JsonTask extends AsyncTask<String, String, String> {
-        protected String doInBackground(String... params) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-            if (!isOnline(MainActivity.this)) {
-
-                return null;
-            }
-            try {
-                URL url = new URL(params[0]);
-
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                InputStream stream = connection.getInputStream();
-
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                StringBuffer buffer = new StringBuffer();
-                String line = "";
-
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
-                }
-                return buffer.toString();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                _iDownload.onError();
-            }
-            return null;
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            _iDownload.onSuccess(result);
-        }
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main2, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public String readFile(String filePath) {
+        InputStream input;
+        try {
+            input = getAssets().open(filePath);
+
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            input.read(buffer);
+            input.close();
+            // byte buffer into a string
+            return new String(buffer);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }

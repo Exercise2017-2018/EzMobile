@@ -14,7 +14,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
+     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

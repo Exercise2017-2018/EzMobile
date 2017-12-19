@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hoarom.ezMobile.activities.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <!--<include layout="@layout/content_main2" />-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="#ccc">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/textview_search_layout"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="@string/search_id_securities"
+                    android:textColor="#2c3e50"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="#e5e5e5"
+                    android:drawablePadding="16dp"
+                    android:drawableRight="@drawable/icon_arrow_to_right"
+                    android:ellipsize="end"
+                    android:gravity="center|left"
+                    android:maxLines="1"
+                    android:minHeight="50dp"
+                    android:padding="8dp"
+                    android:text="@string/tong_quan_thi_truong"
+                    android:textColor="#444"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <include layout="@layout/item_header_table_main_layout" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_market"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+                </android.support.v7.widget.RecyclerView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#e5e5e5"
+                    android:drawablePadding="16dp"
+                    android:ellipsize="end"
+                    android:gravity="center|left"
+                    android:maxLines="1"
+                    android:minHeight="50px"
+                    android:padding="8dp"
+                    android:paddingTop="4dp"
+                    android:text="@string/bang_gia"
+                    android:textColor="#444"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <include
+                    android:id="@+id/linearlayout_title_cost"
+                    layout="@layout/item_header_table_main_layout" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:minHeight="100dp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+    </FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>

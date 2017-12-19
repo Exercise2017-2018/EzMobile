@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "117717565727",
+    "firebase_url": "https://ezmobile11.firebaseio.com",
+    "project_id": "ezmobile11",
+    "storage_bucket": "ezmobile11.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117717565727:android:af73fb61087f61b8",
+        "android_client_info": {
+          "package_name": "com.hoarom.getdatafromgateway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "117717565727-0adivp0uhooui9tefq4gfao6ngfhoudl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hoarom.getdatafromgateway",
+            "certificate_hash": "48450d8bce5df8fbb9d75fbc857fbee3069571b3"
+          }
+        },
+        {
+          "client_id": "117717565727-efhcnj34u75aleognrd26gocv2h4a74v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHktKJd14atTinosZV8Ez9R3WDSCoeDdo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "117717565727-efhcnj34u75aleognrd26gocv2h4a74v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

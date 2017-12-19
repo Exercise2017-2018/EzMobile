@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Yêu Thích" />
+
+    <group android:checkableBehavior="single" >
+        <item
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Trang chủ" />
+        <item
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Tổng Quan Thị Trường" />
+        <item
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Bảng giá" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tin Tức" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Lịch Sự Kiện" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Chỉ Số Thế Giới" />
+
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Biểu Đồ" />
+    </group>
+
+    <item android:title="Thành viên">
+        <menu>
+            <item
+                android:icon="@drawable/ic_menu_share"
+                android:title="Đặt Lệnh" />
+            <item
+                android:icon="@drawable/ic_menu_send"
+                android:title="Ký Quỹ" />
+            <item
+                android:icon="@drawable/ic_menu_send"
+                android:title="Chuyển Tiền" />
+            <item
+                android:icon="@drawable/ic_menu_send"
+                android:title="Bán Lô Lẻ" />
+            <item
+                android:icon="@drawable/ic_menu_send"
+                android:title="Báo Cáo Ứng Trước" />
+            <item
+                android:icon="@drawable/ic_menu_send"
+                android:title="Báo Cáo Tài Sản" />
+        </menu>
+    </item>
+
+    <item android:title="Thiết Lập">
+        <menu>
+            <item android:title="Ngôn ngữ" />
+            <item android:title="Ghi Nhớ Tài Khoản" />
+        </menu>
+    </item>
+</menu>

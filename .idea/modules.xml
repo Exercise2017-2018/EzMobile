@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EzMobile.iml" filepath="$PROJECT_DIR$/EzMobile.iml" />
+      <module fileurl="file://F:\Devv\ThucTap_FPTS\Project\EzMobile11\EzMobile.iml" filepath="F:\Devv\ThucTap_FPTS\Project\EzMobile11\EzMobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EzMobile11.iml" filepath="$PROJECT_DIR$/EzMobile11.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

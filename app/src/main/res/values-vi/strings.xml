@@ -13,5 +13,7 @@
     <string name="values">Giá trị</string>
     <string name="Price">Giá</string>
     <string name="search_id_securities">Tìm kiếm mã chứng khoán</string>
-    <string name="num">Số lượng</string>
+    <string name="quantity">Số lượng</string>
+    <string name="login">Đăng nhập</string>
+    <string name="detail_diagram">BIỂU ĐỒ</string>
 </resources>

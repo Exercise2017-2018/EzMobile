@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#202020</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="up">#008000</color>
-    <color name="average">#FFC600</color>
-    <color name="down">#ff0000</color>
+    <color name="color_text_up">#008000</color>
+    <color name="color_text_average">#FFC600</color>
+    <color name="color_text_down">#ff0000</color>
+
+    <color name="color_text_normal">#2c3e50</color>
 </resources>
