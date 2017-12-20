@@ -37,17 +37,33 @@
         android:textColor="#444"
         android:textSize="12sp" />
 
-    <include
+    <TextView
         android:id="@+id/change"
-        layout="@layout/item_table_main_header_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:drawableRight="@drawable/icon_arrow_sans_upperright"
+        android:ellipsize="end"
+        android:gravity="center|right"
+        android:maxLines="1"
+        android:padding="4dp"
+        android:text="Thay Đổi"
+        android:textColor="#444"
+        android:textSize="12sp" />
 
-    <include
+    <TextView
         android:id="@+id/values"
-        layout="@layout/item_table_main_header_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:drawableRight="@drawable/icon_arrow_sans_upperright"
+        android:ellipsize="end"
+        android:gravity="center|right"
+        android:maxLines="1"
+        android:padding="4dp"
+        android:text="Giá Trị"
+        android:textColor="#444"
+        android:textSize="12sp" />
 </LinearLayout>

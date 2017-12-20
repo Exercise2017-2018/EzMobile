@@ -55,22 +55,7 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#e5e5e5"
-                    android:drawablePadding="16dp"
-                    android:drawableRight="@drawable/icon_arrow_to_right"
-                    android:ellipsize="end"
-                    android:gravity="center|left"
-                    android:maxLines="1"
-                    android:minHeight="50dp"
-                    android:padding="8dp"
-                    android:text="@string/tong_quan_thi_truong"
-                    android:textColor="#444"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                <include layout="@layout/item_main_recyclerview_title_layout" />
 
                 <include layout="@layout/item_header_table_main_layout" />
 

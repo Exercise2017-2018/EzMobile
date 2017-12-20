@@ -32,6 +32,8 @@ dependencies {
     compile 'com.firebase:firebase-jobdispatcher:0.5.2'
     compile 'net.cachapa.expandablelayout:expandablelayout:2.8'
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
     testCompile 'junit:junit:4.12'
 }
 

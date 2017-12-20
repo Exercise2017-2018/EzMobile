@@ -35,7 +35,7 @@ public class QuoteAdapter extends AAdapter {
 
     @Override
     public AHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-
+        Log.w("QuoteAdapter", "onCreateViewHolder: " + viewType);
         switch (viewType) {
             case T_QUOTE: {
                 return new QuoteViewHolder(LayoutInflater.from(parent.getContext())
@@ -88,7 +88,7 @@ public class QuoteAdapter extends AAdapter {
             values.setText(quote.getValues() == null ? 0 + "" : quote.getValues() + "");
             if (quote.getChange() != null) {
                 change.setText(quote.getChange() + "");
-                Log.w("quote", quote.getChange() + "");
+                Log.w("QuoteViewHolder", "bind: " + quote.getName());
                 if (quote.getChange() > 0) {
                     change.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.color_text_up));
                     price.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.color_text_up));
@@ -135,7 +135,7 @@ public class QuoteAdapter extends AAdapter {
 
         @Override
         public void bind(IModel model, IClickCallback callback) {
-
+            Log.w("QuoteDetailViewHolder", "bind: ");
         }
     }
 
@@ -155,6 +155,7 @@ public class QuoteAdapter extends AAdapter {
 
         @Override
         public void bind(IModel model, AAdapter.IClickCallback callback) {
+            Log.w("QuoteItemViewHolder", "bind: ");
             final QuoteDetail quote = (QuoteDetail) model;
 
             name.setText(quote.getCode());
