@@ -4,11 +4,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,15 +31,16 @@ import com.hoarom.ezMobile.model.S;
 import static com.hoarom.ezMobile.Manager.DECIMAL_FORMAT;
 import static com.hoarom.ezMobile.Manager.DECIMAL_FORMAT_NUM;
 import static com.hoarom.ezMobile.Manager.TIME_DELAY_AUTO_LOAD;
-import static com.hoarom.ezMobile.Manager.convertStringToCompany;
+import static com.hoarom.ezMobile.Manager.convertStringToQuote;
 import static com.hoarom.ezMobile.Settings.STRING_API;
 import static com.hoarom.ezMobile.Settings.STRING_COMPANY_NAME;
 import static com.hoarom.ezMobile.api.api.ARGUMENT_TYPE_PRICE_DOWN;
 import static com.hoarom.ezMobile.api.api.ARGUMENT_TYPE_PRICE_UP;
 import static com.hoarom.ezMobile.api.api.ARGUMENT_TYPE_QUANTITY_UP;
 
-public class DetailActivity extends FragmentActivity implements ChangeDetailFragment.OnFragmentInteractionListener,
+public class DetailActivity extends AppCompatActivity implements ChangeDetailFragment.OnFragmentInteractionListener,
         DiagramDetailFragment.OnFragmentInteractionListener {
+    private Toolbar toolbar;
 
     Quote _quote = new Quote();
 
@@ -59,7 +63,7 @@ public class DetailActivity extends FragmentActivity implements ChangeDetailFrag
     JsonTaskListener _iListenner = new JsonTaskListener() {
         @Override
         public void onSuccess(String data) {
-            _quote = convertStringToCompany(data, -1);
+            _quote = convertStringToQuote(data, -1);
 
             updateUI();
         }
@@ -89,13 +93,43 @@ public class DetailActivity extends FragmentActivity implements ChangeDetailFrag
 
         FirebaseApp.initializeApp(DetailActivity.this);
 
-        _txtMain = (TextView) findViewById(R.id.textMain);
-        _txtNum = (TextView) findViewById(R.id.textNum);
-        _txtKL = (TextView) findViewById(R.id.textKL);
-        _txtGT = (TextView) findViewById(R.id.textGT);
-        _textUpDown = (TextView) findViewById(R.id.textUpDown);
-        _textThoaThuanGT = (TextView) findViewById(R.id.textThoaThuanGT);
-        _textThoaThuanSL = (TextView) findViewById(R.id.textThoaThuanSL);
+        createView();
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle.getSerializable(STRING_API) != null) {
+            if (bundle.getSerializable(STRING_API) != null) {
+                _api = (String) bundle.getSerializable(STRING_API);
+            }
+            _quoteName = (String) bundle.getSerializable(STRING_COMPANY_NAME);
+            JsonTask jsonTask = new JsonTask(_iListenner);
+            jsonTask.execute(_api);
+        } else {
+        }
+
+        if (_quoteName != null) {
+            getSupportActionBar().setTitle(_quoteName + " Chi tiết");
+            toolbar.setTitle(_quoteName + " Chi tiết");
+        } else {
+            toolbar.setTitle(getString(R.string.app_name));
+        }
+
+        _handler.post(timedTask);
+    }
+
+    private void createView() {
+
+        toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        _txtMain = findViewById(R.id.textMain);
+        _txtNum = findViewById(R.id.textNum);
+        _txtKL = findViewById(R.id.textKL);
+        _txtGT = findViewById(R.id.textGT);
+        _textUpDown = findViewById(R.id.textUpDown);
+        _textThoaThuanGT = findViewById(R.id.textThoaThuanGT);
+        _textThoaThuanSL = findViewById(R.id.textThoaThuanSL);
 
         _linearLayout = findViewById(R.id.linearlayout);
 
@@ -111,50 +145,29 @@ public class DetailActivity extends FragmentActivity implements ChangeDetailFrag
         _tabLayout.setTabsFromPagerAdapter(adapter);
         //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle.getSerializable(STRING_API) != null) {
-            if (bundle.getSerializable(STRING_API) != null) {
-                _api = (String) bundle.getSerializable(STRING_API);
-            }
-            _quoteName = (String) bundle.getSerializable(STRING_COMPANY_NAME);
-            JsonTask jsonTask = new JsonTask(_iListenner);
-            jsonTask.execute(_api);
-        } else {
-        }
-
-
-//        if (_quoteName != null) {
-//            getSupportActionBar().setTitle(_quoteName + " Chi tiết");
-//        } else {
-//            getSupportActionBar().setTitle(getString(R.string.app_name));
-//        }
-
-        _handler.post(timedTask);
     }
-
 
     private void updateUI() {
         if (_quote != null) {
             if (_quoteName != null) {
-                _txtMain.setText(_quoteName + ": " + _quote.getPrice());
+                _txtMain.setText(_quoteName + ": " + _quote.getMatchPrice());
             } else {
-                _txtMain.setText(": " + (_quote.getPrice() == null ? "0" : _quote.getPrice()));
+                _txtMain.setText(": " + (_quote.getMatchPrice() == null ? "0" : _quote.getMatchPrice()));
             }
 
-            if (_quote.getNum() != null) {
-                _txtKL.setText(Html.fromHtml(getString(R.string.sl, DECIMAL_FORMAT_NUM.format(Double.parseDouble(_quote.getNum())))));
+            if (_quote.getTotalQtty() != null) {
+                _txtKL.setText(Html.fromHtml(getString(R.string.sl, DECIMAL_FORMAT_NUM.format(Double.parseDouble(_quote.getTotalQtty())))));
             }
             if (_quote.getValues() != null) {
                 _txtGT.setText(Html.fromHtml(getString(R.string.gt, DECIMAL_FORMAT.format(Double.parseDouble(_quote.getValues())))));
             }
 
-            if (_quote.getChange() != null && _quote.getChange() > 0) {
-                _txtNum.setText(Html.fromHtml(getString(R.string.up, _quote.getChange() + "", _quote.getPercent() + "")));
-            } else if (_quote.getChange() != null && _quote.getChange() == 0) {
-                _txtNum.setText(Html.fromHtml(getString(R.string.average, _quote.getChange() + "", _quote.getPercent() + "")));
+            if (_quote.getChangePrice() != null && _quote.getChangePrice() > 0) {
+                _txtNum.setText(Html.fromHtml(getString(R.string.up, _quote.getChangePrice() + "", _quote.getPercent() + "")));
+            } else if (_quote.getChangePrice() != null && _quote.getChangePrice() == 0) {
+                _txtNum.setText(Html.fromHtml(getString(R.string.average, _quote.getChangePrice() + "", _quote.getPercent() + "")));
             } else {
-                _txtNum.setText(Html.fromHtml(getString(R.string.down, _quote.getChange() + "", _quote.getPercent() + "")));
+                _txtNum.setText(Html.fromHtml(getString(R.string.down, _quote.getChangePrice() + "", _quote.getPercent() + "")));
             }
 
             _textUpDown.setText(Html.fromHtml(getString(R.string.up_down, _quote.getNumUp() + "", _quote.getNumAverage() + "",
@@ -183,9 +196,9 @@ public class DetailActivity extends FragmentActivity implements ChangeDetailFrag
                 S s = _quote.getListS().get(i);
                 linearLayout_row = (LinearLayout) inflater.inflate(R.layout.item_table_detail_row_s_layout, null);
 
-                price =  linearLayout_row.findViewById(R.id.price);
+                price = linearLayout_row.findViewById(R.id.price);
                 percent = (TextView) linearLayout_row.findViewById(R.id.percent);
-                num =  linearLayout_row.findViewById(R.id.num);
+                num = linearLayout_row.findViewById(R.id.num);
                 values = (TextView) linearLayout_row.findViewById(R.id.values);
 
                 price.setText("S" + (i + 1) + ": " + s.getMain());

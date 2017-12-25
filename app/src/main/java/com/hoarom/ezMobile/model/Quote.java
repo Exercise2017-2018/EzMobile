@@ -14,14 +14,14 @@ import java.util.List;
  */
 
 public class Quote implements IModel, Serializable, Parcelable {
-    private String status;
-    private String name;
-    private Double price; //~933.7
 
-    private Double change;
+    private int type;
+
+    private String status;
+    private String code;
     private Double percent;//%
-    private String num;//số lượng - SL
     private String values;// giá trị - GT
+
     private Double numUp;
     private Double numAverage;
     private Double numDown;
@@ -31,25 +31,42 @@ public class Quote implements IModel, Serializable, Parcelable {
 
     private String api;
 
+    //phần main hiển thị
+    //    @ABI#u#28.7#0.9#2,200#3#31.9#23.7#27.8
+    //    Code#Color#MatchPrice#ChangePrice#TotalQtty#centerNo#Ceiling#Floor#refPrice\
+    private String color;
+    private Double matchPrice;
+    private Double changePrice;
+    private String totalQtty;//số lượng - SL
+    private Double centerNo;
+    private Double refPrice;//giá để so sánh ==> màu hiển thị
+    //
+//    //
+    private Double ceiling;
+    private Double floor;
+
+    private Double open;
+    private Double close;
+    private Double average;
+    private Double hightest;
+    private Double lowest;
+
+    private Double changepercent;
+    private Double totalshares;
+    private Double totalvalue;
+//
+
     protected Quote(Parcel in) {
+        type = in.readInt();
         status = in.readString();
-        name = in.readString();
-        if (in.readByte() == 0) {
-            price = null;
-        } else {
-            price = in.readDouble();
-        }
-        if (in.readByte() == 0) {
-            change = null;
-        } else {
-            change = in.readDouble();
-        }
+        code = in.readString();
+
         if (in.readByte() == 0) {
             percent = null;
         } else {
             percent = in.readDouble();
         }
-        num = in.readString();
+
         values = in.readString();
         if (in.readByte() == 0) {
             numUp = null;
@@ -77,6 +94,78 @@ public class Quote implements IModel, Serializable, Parcelable {
             values1 = in.readDouble();
         }
         api = in.readString();
+        color = in.readString();
+        if (in.readByte() == 0) {
+            matchPrice = null;
+        } else {
+            matchPrice = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            changePrice = null;
+        } else {
+            changePrice = in.readDouble();
+        }
+        totalQtty = in.readString();
+        if (in.readByte() == 0) {
+            centerNo = null;
+        } else {
+            centerNo = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            refPrice = null;
+        } else {
+            refPrice = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            ceiling = null;
+        } else {
+            ceiling = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            floor = null;
+        } else {
+            floor = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            open = null;
+        } else {
+            open = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            close = null;
+        } else {
+            close = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            average = null;
+        } else {
+            average = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            hightest = null;
+        } else {
+            hightest = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            lowest = null;
+        } else {
+            lowest = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            changepercent = null;
+        } else {
+            changepercent = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            totalshares = null;
+        } else {
+            totalshares = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            totalvalue = null;
+        } else {
+            totalvalue = in.readDouble();
+        }
     }
 
     public static final Creator<Quote> CREATOR = new Creator<Quote>() {
@@ -90,6 +179,141 @@ public class Quote implements IModel, Serializable, Parcelable {
             return new Quote[size];
         }
     };
+//                String name, String color, String matchPrice, Double changePrice,
+//                        Double totalQtty, Double centerNo, Double ceiling, double floor, Double refPrice
+
+    public Quote(String code, String color, Double matchPrice, Double changePrice,
+                 String totalQtty, Double centerNo, Double ceiling, double floor, Double refPrice) {
+        this.code = code;
+        this.color = color;
+        this.matchPrice = matchPrice;
+        this.changePrice = changePrice;
+        this.totalQtty = totalQtty;
+        this.centerNo = centerNo;
+        this.ceiling = ceiling;
+        this.floor = floor;
+        this.refPrice = refPrice;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Double getMatchPrice() {
+        return matchPrice;
+    }
+
+    public void setMatchPrice(Double matchPrice) {
+        this.matchPrice = matchPrice;
+    }
+
+    public Double getChangePrice() {
+        return changePrice;
+    }
+
+    public void setChangePrice(Double changePrice) {
+        this.changePrice = changePrice;
+    }
+
+    public String getTotalQtty() {
+        return totalQtty;
+    }
+
+    public void setTotalQtty(String totalQtty) {
+        this.totalQtty = totalQtty;
+    }
+
+    public Double getCenterNo() {
+        return centerNo;
+    }
+
+    public void setCenterNo(Double centerNo) {
+        this.centerNo = centerNo;
+    }
+
+    public Double getOpen() {
+        return open;
+    }
+
+    public void setOpen(Double open) {
+        this.open = open;
+    }
+
+    public Double getClose() {
+        return close;
+    }
+
+    public void setClose(Double close) {
+        this.close = close;
+    }
+
+    public Double getAverage() {
+        return average;
+    }
+
+    public void setAverage(Double average) {
+        this.average = average;
+    }
+
+    public Double getHightest() {
+        return hightest;
+    }
+
+    public void setHightest(Double hightest) {
+        this.hightest = hightest;
+    }
+
+    public Double getLowest() {
+        return lowest;
+    }
+
+    public void setLowest(Double lowest) {
+        this.lowest = lowest;
+    }
+
+    public Double getChangepercent() {
+        return changepercent;
+    }
+
+    public void setChangepercent(Double changepercent) {
+        this.changepercent = changepercent;
+    }
+
+    public Double getTotalshares() {
+        return totalshares;
+    }
+
+    public void setTotalshares(Double totalshares) {
+        this.totalshares = totalshares;
+    }
+
+    public Double getTotalvalue() {
+        return totalvalue;
+    }
+
+    public void setTotalvalue(Double totalvalue) {
+        this.totalvalue = totalvalue;
+    }
+
+    public Double getRefPrice() {
+        return refPrice;
+    }
+
+    public void setRefPrice(Double refPrice) {
+        this.refPrice = refPrice;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public String getApi() {
         return api;
@@ -105,12 +329,12 @@ public class Quote implements IModel, Serializable, Parcelable {
         listS = new ArrayList<>();
     }
 
-    public String getName() {
-        return name;
+    public String getCode() {
+        return code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Double getNum1() {
@@ -137,21 +361,6 @@ public class Quote implements IModel, Serializable, Parcelable {
         this.status = status;
     }
 
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Double getChange() {
-        return change;
-    }
-
-    public void setChange(Double change) {
-        this.change = change;
-    }
 
     public Double getPercent() {
         return percent;
@@ -159,14 +368,6 @@ public class Quote implements IModel, Serializable, Parcelable {
 
     public void setPercent(Double percent) {
         this.percent = percent;
-    }
-
-    public String getNum() {
-        return num;
-    }
-
-    public void setNum(String num) {
-        this.num = num;
     }
 
     public String getValues() {
@@ -227,26 +428,14 @@ public class Quote implements IModel, Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(status);
-        dest.writeString(name);
-        if (price == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(price);
-        }
-        if (change == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(change);
-        }
+        dest.writeString(code);
         if (percent == null) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
             dest.writeDouble(percent);
         }
-        dest.writeString(num);
+
         dest.writeString(values);
         if (numUp == null) {
             dest.writeByte((byte) 0);

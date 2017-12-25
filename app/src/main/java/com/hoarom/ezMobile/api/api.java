@@ -45,13 +45,17 @@ public class api {
     public static int ARGUMENT_TYPE_VALUE_UP = 5;
     public static int ARGUMENT_TYPE_VALUE_DOWN = 6;
 
-
+    //phần bảng giá
     // http://gateway.fpts.com.vn/G5G/fpts/?s=quotes&symbol=abt,acb,abi (Thông tin giá cơ bản các mã )
-    public static String API_LIST_QUOTE_DETAIL = "http://gateway.fpts.com.vn/G5G/fpts/?s=quotes&symbol=";
+    public static String API_LIST_QUOTE = "http://gateway.fpts.com.vn/G5G/fpts/?s=quotes&symbol=";
 //    trong đó
 //    ABT#d#28.9#-0.2#60#1#31.1#27.1#29.1
 //    @ACB#u#35#0.8#1,447,100#2#37.6#30.8#34.2
 //    @ABI#u#28.7#0.9#2,200#3#31.9#23.7#27.8
 //    Code#Color#MatchPrice#ChangePrice#TotalQtty#CenterNo#Ceiling#Floor#RefPrice
 //    UpDown=u/d/n/c/f/b (u=Up; d=Down; n=NoChange; c=Ceiling; f=Floor; b=chưa khớp); CenterNo=1/2/3 (1-HO; 2-HA; 3-UP)
+
+
+    //chart
+    public static  String API_CHART = "http://liveprice3.fpts.com.vn/g5g/history/?s=vnindex";
 }

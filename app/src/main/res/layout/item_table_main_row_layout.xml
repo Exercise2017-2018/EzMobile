@@ -80,6 +80,4 @@
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
-
-    <include layout="@layout/item_divider_layout" />
 </LinearLayout>

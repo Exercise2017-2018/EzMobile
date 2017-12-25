@@ -10,8 +10,7 @@ public interface IModel extends Parcelable {
 
     public static int T_QUOTE = 1;
     public static int T_QUOTE_DETAIL = 2;
-    public static int T_QUOTE_ITEM = 3;//dưới bảng giá
-    public static int T_QUOTE_DETAIL_ITEM = 4;//chi tiết dưới bảng giá
+     public static int T_QUOTE_DETAIL_ITEM = 4;//chi tiết dưới bảng giá
 
     public int getViewType();
 

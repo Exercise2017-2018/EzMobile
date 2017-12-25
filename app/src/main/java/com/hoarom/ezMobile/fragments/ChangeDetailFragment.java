@@ -18,14 +18,13 @@ import com.hoarom.ezMobile.adapter.QuoteAdapter;
 import com.hoarom.ezMobile.asyncTasks.JsonTask;
 import com.hoarom.ezMobile.interfaces.IModel;
 import com.hoarom.ezMobile.interfaces.JsonTaskListener;
-import com.hoarom.ezMobile.model.QuoteDetail;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.hoarom.ezMobile.Manager.TIME_DELAY_AUTO_LOAD;
 import static com.hoarom.ezMobile.Manager.getCByQuoteName;
-import static com.hoarom.ezMobile.Manager.getListQuoteFromString;
+
 import static com.hoarom.ezMobile.api.api.API_DETAIL;
 
 public class ChangeDetailFragment extends Fragment {
@@ -65,11 +64,11 @@ public class ChangeDetailFragment extends Fragment {
     JsonTaskListener _iListenner = new JsonTaskListener() {
         @Override
         public void onSuccess(String data) {
-            List<QuoteDetail> list = getListQuoteFromString(data);
-            for (int i = 0; i < list.size(); i++) {
-                listQuote.add((IModel) list.get(i));
-            }
-            updateUI();
+//            List<QuoteDetail> list = getListQuoteFromString(data);
+//            for (int i = 0; i < list.size(); i++) {
+//                listQuote.add((IModel) list.get(i));
+//            }
+//            updateUI();
         }
 
         @Override
