@@ -56,6 +56,9 @@ public class Quote implements IModel, Serializable, Parcelable {
     private Double totalvalue;
 //
 
+    private String date;
+
+
     protected Quote(Parcel in) {
         type = in.readInt();
         status = in.readString();
@@ -193,6 +196,35 @@ public class Quote implements IModel, Serializable, Parcelable {
         this.ceiling = ceiling;
         this.floor = floor;
         this.refPrice = refPrice;
+    }
+
+    public Quote(String date, Double matchPrice) {
+        this.date = date;
+        this.matchPrice = matchPrice;
+    }
+
+    public Double getCeiling() {
+        return ceiling;
+    }
+
+    public void setCeiling(Double ceiling) {
+        this.ceiling = ceiling;
+    }
+
+    public Double getFloor() {
+        return floor;
+    }
+
+    public void setFloor(Double floor) {
+        this.floor = floor;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getColor() {

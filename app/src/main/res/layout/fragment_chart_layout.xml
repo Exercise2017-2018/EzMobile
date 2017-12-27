@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_margin="4dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="4dp"
+    tools:context="com.hoarom.ezMobile.fragments.ChartFragment">
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barchart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/smart_tab" />
+
+    <com.ogaclejapan.smarttablayout.SmartTabLayout
+        android:id="@+id/smart_tab"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        app:stl_defaultTabTextColor="#444"
+        app:stl_defaultTabTextHorizontalPadding="12dp"
+        app:stl_indicatorColor="#666"
+        app:stl_indicatorInterpolation="linear"
+        app:stl_indicatorThickness="3dp"
+        app:stl_underlineThickness="1dp" />
+</LinearLayout>

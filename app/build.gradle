@@ -32,8 +32,20 @@ dependencies {
     compile 'com.firebase:firebase-jobdispatcher:0.5.2'
     compile 'net.cachapa.expandablelayout:expandablelayout:2.8'
 
+    compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+    compile 'com.ogaclejapan.smarttablayout:utils-v13:1.6.1@aar'
+
+
     testCompile 'junit:junit:4.12'
+    implementation project(':MPChartLib')
 }
+
+
+
+
+
+
+
 
 
 

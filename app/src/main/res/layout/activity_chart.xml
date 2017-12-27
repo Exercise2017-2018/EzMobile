@@ -4,6 +4,114 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context="com.hoarom.ezMobile.activities.ChartActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_above="@id/barchart"
+        android:layout_gravity="center"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <EditText
+            android:id="@+id/code"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center|left"
+            android:hint="Mã CK" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:background="@android:drawable/btn_dropdown"
+            android:dropDownWidth="fill_parent"
+            android:gravity="center|left">
+
+        </Spinner>
+    </LinearLayout>
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barchart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/smart_tab"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:padding="4dp" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barchart1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/smart_tab"
+        android:layout_margin="4dp"
+        android:layout_weight="1"
+        android:padding="4dp" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:background="#ff0000" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/barchart"
+        android:layout_gravity="center"
+        android:layout_margin="4dp"
+        android:background="#e5e5e5"
+        android:padding="4dp"
+        android:scrollbars="none"
+        app:tabSelectedTextColor="#fff"
+        app:tabTextColor="@color/color_text_normal">
+
+        <!--app:tabBackground="#e5e5e5"-->
+    </android.support.design.widget.TabLayout>
+
+
+    <!--<android.support.v7.widget.ButtonBarLayout-->
+    <!--android:id="@+id/buttonBarLayout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:scrollbars="none">-->
+
+
+    <!--&lt;!&ndash;<android.support.v4.widget.Space&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/spacer"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="0dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:visibility="invisible" />&ndash;&gt;-->
+
+    <!--</android.support.v7.widget.ButtonBarLayout>-->
 
 </LinearLayout>

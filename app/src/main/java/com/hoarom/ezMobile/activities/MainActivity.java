@@ -1,88 +1,67 @@
 package com.hoarom.ezMobile.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
 import com.hoarom.ezMobile.R;
-import com.hoarom.ezMobile.adapter.ExpandableListAdapter;
-import com.hoarom.ezMobile.adapter.QuoteAdapter;
-import com.hoarom.ezMobile.asyncTasks.JsonTask;
-import com.hoarom.ezMobile.interfaces.IModel;
-import com.hoarom.ezMobile.interfaces.JsonTaskListener;
-import com.hoarom.ezMobile.model.Quote;
+import com.hoarom.ezMobile.adapter.PaperViewAdapter;
+import com.hoarom.ezMobile.fragments.ChartFragment;
+import com.hoarom.ezMobile.fragments.EventsFragment;
+import com.hoarom.ezMobile.fragments.HomeFragment;
+import com.hoarom.ezMobile.fragments.IndexFragment;
+import com.hoarom.ezMobile.fragments.NewsFragment;
+import com.hoarom.ezMobile.fragments.PriceFragment;
+import com.hoarom.ezMobile.fragments.TongQuanThiTruongFragment;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.hoarom.ezMobile.Manager.DECIMAL_FORMAT_NUM;
-import static com.hoarom.ezMobile.Manager.TIME_DELAY_AUTO_LOAD;
-import static com.hoarom.ezMobile.Manager.convertStringToQuote;
-import static com.hoarom.ezMobile.Manager.convertStringToListQuote;
 import static com.hoarom.ezMobile.Settings.SEARCH_ID_SERCURITIES;
-import static com.hoarom.ezMobile.adapter.ExpandableListAdapter.ACTION_NEXT;
-import static com.hoarom.ezMobile.adapter.ExpandableListAdapter.ACTION_NEXT_ADD_EDIT;
-import static com.hoarom.ezMobile.adapter.ExpandableListAdapter.TYPE_BANG_GIA;
-import static com.hoarom.ezMobile.adapter.ExpandableListAdapter.TYPE_TONG_QUAN_THI_TRUONG;
-import static com.hoarom.ezMobile.api.api.APIS;
-import static com.hoarom.ezMobile.api.api.API_LIST_QUOTE;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private  Toolbar toolbar;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        HomeFragment.OnFragmentInteractionListener {
 
-    private RecyclerView recyclerview;
-    private ExpandableListAdapter adapter;
+    DrawerLayout drawer;
 
-    //Phần thông tin chung
-    List<IModel> _quotes_general = new ArrayList<>();
+    PaperViewAdapter _adapter;
 
-    //Phần bảng giá
-    List<IModel> _quotes_price = new ArrayList<>();
-    Handler _handler = new Handler();
+    ActionBarDrawerToggle toggle;
+    ViewPager view_pager;
 
-    int _index = 0;//count list company download success
+    private Toolbar toolbar;
 
-    JsonTaskListener _iListenner = new JsonTaskListener() {
-        @Override
-        public void onSuccess(String data) {
-            Log.w("MainActivity", "onSuccess: " + _index);
+    private int values = 1;
 
-            if (_quotes_general.size() < APIS.size()) {
-                _quotes_general.add(convertStringToQuote(data, _index++));
-            }
-            if (_index == APIS.size()) {
-                updateUI();
-            }
-        }
+    public static final int TRANG_CHU = 1;
+    public static final int TONG_QUAN_THI_TRUONG = 2;
+    public static final int BANG_GIA = 3;
+    public static final int TIN_TUC = 4;
+    public static final int LICH_SU_KIEN = 5;
+    public static final int CHI_SO_THE_GIOI = 6;
+    public static final int BIEU_DO = 7;
+    public static final int DAT_LENH = 8;
+    public static final int KY_QUY = 9;
+    public static final int CHUYEN_TIEN = 10;
+    public static final int BAN_LO_LE = 11;
+    public static final int BAO_CAO_UNG_TRUOC = 12;
+    public static final int BAO_CAO_TAI_SAN = 13;
 
-        @Override
-        public void onError() {
-            //do something
-            Log.w("MainActivity", "onError: " + _index);
-            if (_index == APIS.size()) {
-                updateUI();
-            }
-        }
-    };
+    ArrayList<Fragment> listFragment = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,126 +70,95 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         createView();
 
-        updateUI();
+        loadDataToViewPager();
 
-        getData();
+        view_pager.setCurrentItem(TRANG_CHU);
     }
 
     private void createView() {
+
+        toolbar = findViewById(R.id.toolbar);
+
+        view_pager = findViewById(R.id.view_pager);
+
+
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.app_name));
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setItemIconTintList(null);
         navigationView.setNavigationItemSelectedListener(this);
-
-        recyclerview = findViewById(R.id.recyclerView);
-
-
     }
 
-    private void updateUI() {
+    public void loadDataToViewPager() {
 
+        FragmentManager manager = getSupportFragmentManager();
 
-        Log.w("MainActivity", "updateUI: ");
-        Log.w("MainActivity", "updateUI: _quotes_general= " + _quotes_general.size());
-        List<ExpandableListAdapter.Item> data = new ArrayList<>();
-        data.add(new ExpandableListAdapter.Item(TYPE_TONG_QUAN_THI_TRUONG, "TỔNG QUAN THỊ TRƯỜNG", ACTION_NEXT, _quotes_general,
-                getString(R.string.change), getString(R.string.values)));
+        listFragment = new ArrayList<>();
+        listFragment.add(new HomeFragment());
+        listFragment.add(new TongQuanThiTruongFragment());
+        listFragment.add(new PriceFragment());
+        listFragment.add(new NewsFragment());
+        listFragment.add(new EventsFragment());
+        listFragment.add(new IndexFragment());
+        listFragment.add(new ChartFragment());
 
-        //phần bảng giá
-        if (_quotes_price != null && _quotes_price.size() != 0) {
-            Log.w("MainActivity", "updateUI: _quotes_price.size()= " + _quotes_price.size());
-            data.add(new ExpandableListAdapter.Item(TYPE_BANG_GIA, "BẢNG GIÁ", ACTION_NEXT_ADD_EDIT, _quotes_price,
-                    getString(R.string.change), getString(R.string.quantity)));
-        } else {
-            data.add(new ExpandableListAdapter.Item("BẢNG GIÁ", ACTION_NEXT_ADD_EDIT,
-                    getString(R.string.change), getString(R.string.quantity)));
-        }
+        _adapter = new PaperViewAdapter(manager, listFragment);
+        _adapter.notifyDataSetChanged();
 
-        adapter = new ExpandableListAdapter(data);
-        recyclerview.setAdapter(adapter);
+        updatePager(listFragment);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerview.addItemDecoration(new DividerItemDecoration(MainActivity.this, layoutManager.getOrientation()));
+        Log.w("MainActivity", "loadDataToViewPager: " + _adapter.getListFragment().size());
+        view_pager.setAdapter(_adapter);
 
-        recyclerview.setLayoutManager(layoutManager);
-
-        adapter.notifyDataSetChanged();
+        updatetoolbar(R.id.nav_trangchu);
     }
 
-
-    private void getData() {
-        //COMPANIES
-        Log.w("MainActivity", "getData: ");
-        _index = 0;
-        for (int i = 0; i < APIS.size(); i++) {
-            final int finalI = i;
-            Runnable timedTask = new Runnable() {
-                @Override
-                public void run() {
-
-                    (new JsonTask(_iListenner)).execute(APIS.get(finalI));
-                    _handler.postDelayed(this, TIME_DELAY_AUTO_LOAD * 1000000);
-                }
-            };
-            _handler.post(timedTask);
-        }
-
-        //BẢNG GIÁ
-        final String stringQuote = readFile("quote.txt");
-        Log.w("MainActivity", "getData: " + stringQuote);
-        Runnable runnable = new Runnable() {
+    private void updatePager(final ArrayList<Fragment> fragments) {
+        Log.w("MainActivity", "updatePager: ");
+        _adapter = new PaperViewAdapter(getSupportFragmentManager(), listFragment);
+        _adapter.notifyDataSetChanged();
+        view_pager.setAdapter(_adapter);
+        view_pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void run() {
-                (new JsonTask(new JsonTask.TaskListener() {
-                    @Override
-                    public void onSuccess(String data) {
-                        //convert data to QuoteDetail
-
-                        List<Quote> list = convertStringToListQuote(data);
-                        if(_quotes_price.size() == list.size()){
-                            _quotes_price.clear();
-                        }
-                        for (int i = 0; i < list.size(); i++) {
-                            _quotes_price.add(list.get(i));
-                        }
-                        updateUI();
-                    }
-
-                    @Override
-                    public void onError() {
-
-                    }
-                })).execute(API_LIST_QUOTE + stringQuote);
-
-                _handler.postDelayed(this, TIME_DELAY_AUTO_LOAD * 10);
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.w("MainActivity", "onPageScrolled: ");
             }
-        };
-        _handler.post(runnable);
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.w("MainActivity", "onPageSelected: ");
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                Log.w("MainActivity", "onPageScrollStateChanged: ");
+            }
+        });
+
+        view_pager.setCurrentItem(1, false);
     }
 
-    public String readFile(String filePath) {
-        InputStream input;
-        try {
-            input = getAssets().open(filePath);
+    public void updatetoolbar(int k) {
+        switch (k) {
+            case R.id.nav_trangchu: {
+                toolbar.setTitle(getString(R.string.app_name));
+//                fr_layout.setBackgroundResource(R.drawable.backgroundnoel);
+                break;
+            }
+            case R.id.nav_bieudo: {
+                toolbar.setTitle("Biểu đồ VNINDEX");
 
-            int size = input.available();
-            byte[] buffer = new byte[size];
-            input.read(buffer);
-            input.close();
-            // byte buffer into a string
-            return new String(buffer);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
+                break;
+            }
         }
     }
 
@@ -218,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onRestart() {
         super.onRestart();
-        getData();
+
     }
 
     @Override
@@ -230,13 +178,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
 
-        _handler.removeCallbacksAndMessages(null);
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        _handler.removeCallbacksAndMessages(null);
+
     }
 
     boolean isChange = true;
@@ -272,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                        View view = recyclerView.getChildAt(i);
 //                        if (view == null)
 //                            continue;
-//                        TextView values = view.findViewById(R.id.values);
+//                        TextView values = view.findViewById(oR.id.values);
 //                        if (isValues) {
 //                            _textView_values.setText(R.string.quantity);
 //                            Log.w("companies", quote.getTotalQtty() + "");
@@ -292,6 +240,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        }
 //    };
 
+    public void updateCurDrawerType() {
+        if (_adapter != null) {
+            _adapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -305,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -316,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
+//        getMenuInflater().inflate(R.menu.main2, menu);
         return true;
     }
 
@@ -340,11 +294,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Log.w("MainActivity", "onNavigationItemSelected: " + id + " values = " + values);
+        switch (id) {
+            case R.id.nav_trangchu:
+                values = TRANG_CHU;
+                break;
+            case R.id.nav_bieudo:
+                values = BIEU_DO;
+                break;
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        }
+        updatetoolbar(id);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
+        view_pager.setCurrentItem(values);
+
         return true;
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

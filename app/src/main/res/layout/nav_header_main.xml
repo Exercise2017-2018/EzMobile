@@ -28,6 +28,6 @@
         android:textSize="12sp"
         android:textColor="#fff"
         android:layout_height="wrap_content"
-        android:background="@drawable/main_background_textview_layout"
+        android:background="@drawable/bg_textview_layout"
         android:text="@string/login" />
 </LinearLayout>

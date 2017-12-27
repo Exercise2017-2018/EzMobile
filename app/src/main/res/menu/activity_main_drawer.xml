@@ -5,27 +5,34 @@
 
     <item android:title="Yêu Thích" />
 
-    <group android:checkableBehavior="single" >
+    <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_trangchu"
             android:icon="@drawable/ic_menu_camera"
             android:title="Trang chủ" />
         <item
+            android:id="@+id/nav_tongquanthitruong"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Tổng Quan Thị Trường" />
         <item
+            android:id="@+id/nav_banggia"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Bảng giá" />
         <item
+            android:id="@+id/nav_tintuc"
             android:icon="@drawable/ic_menu_manage"
             android:title="Tin Tức" />
         <item
+            android:id="@+id/nav_lichsukien"
             android:icon="@drawable/ic_menu_manage"
             android:title="Lịch Sự Kiện" />
         <item
+            android:id="@+id/nav_chisothegioi"
             android:icon="@drawable/ic_menu_manage"
             android:title="Chỉ Số Thế Giới" />
 
         <item
+            android:id="@+id/nav_bieudo"
             android:icon="@drawable/ic_menu_manage"
             android:title="Biểu Đồ" />
     </group>
@@ -33,21 +40,27 @@
     <item android:title="Thành viên">
         <menu>
             <item
+                android:id="@+id/nav_datlenh"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Đặt Lệnh" />
             <item
+                android:id="@+id/nav_kyquy"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Ký Quỹ" />
             <item
+                android:id="@+id/nav_chuyentien"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Chuyển Tiền" />
             <item
+                android:id="@+id/nav_banlole"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Bán Lô Lẻ" />
             <item
+                android:id="@+id/nav_baocaoungtruoc"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Báo Cáo Ứng Trước" />
             <item
+                android:id="@+id/nav_baocaotaisan"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Báo Cáo Tài Sản" />
         </menu>
@@ -55,8 +68,12 @@
 
     <item android:title="Thiết Lập">
         <menu>
-            <item android:title="Ngôn ngữ" />
-            <item android:title="Ghi Nhớ Tài Khoản" />
+            <item
+                android:id="@+id/nav_ngonngu"
+                android:title="Ngôn ngữ" />
+            <item
+                android:id="@+id/nav_ghinhotaikhoan"
+                android:title="Ghi Nhớ Tài Khoản" />
         </menu>
     </item>
 </menu>

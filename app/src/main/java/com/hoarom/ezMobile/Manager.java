@@ -4,13 +4,23 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.hoarom.ezMobile.model.Quote;
 import com.hoarom.ezMobile.model.S;
 
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static com.hoarom.ezMobile.Settings.COMPANIES;
 import static com.hoarom.ezMobile.Settings.HNX;
@@ -35,6 +45,8 @@ public class Manager {
     public static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("###,###,###,###.##");
 
     public static DecimalFormat DECIMAL_FORMAT_NUM = new DecimalFormat("###,###,###,###");
+
+    public static DateFormat FORMAT_DATE = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     public static Quote convertStringToQuote(String data, int index) {
         if (data == null) {
@@ -122,6 +134,167 @@ public class Manager {
         }
 
         return list;
+    }
+
+    public static List<List<Quote>> convertStringToListQuoteChart(String data) {
+        Log.w("Manager", "convertStringToListQuoteChart: " + data);
+        List<List<Quote>> listArrayList = new ArrayList<>();
+        List<Quote> root = new ArrayList<>();
+
+        if (data.length() > 0) {
+            //temp[i] là quote thứ i
+            String quote[] = data.split("\\]\\,\\[");
+
+            for (int i = 0; i < quote.length; i++) {
+                String temp[] = quote[i].replace("[[", "").replace("[", "")
+                        .replace("]]", "")
+                        .replace("\"", "").split(",");
+
+//                Log.w("Manager", "convertStringToListQuoteChart:  temp[0]= " + temp[0] + "  temp[1]= " + temp[1]);
+                root.add(new Quote(temp[0], Double.parseDouble(temp[1])));
+            }
+        }
+
+        if (root.size() > 0) {
+            Calendar current = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
+
+            Date date = null;
+            //1 week
+            int listArrayList_size = 0;
+            int i = root.size() - 1;
+            List<Quote> quotes_1W = new ArrayList<>();
+            for (int j = i - 1; j >= 0; j--) {
+                try {
+                    date = FORMAT_DATE.parse(root.get(j).getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendar.setTime(date);
+                if (calendar.get(Calendar.YEAR) == current.get(Calendar.YEAR)
+                        && calendar.get(Calendar.MONTH) == current.get(Calendar.MONTH)
+                        && Math.abs(calendar.get(Calendar.DAY_OF_MONTH) - current.get(Calendar.DAY_OF_MONTH)) <= 7) {
+
+                    quotes_1W.add(root.get(j));
+                } else {
+                    i = j;
+                    break;
+                }
+            }
+            listArrayList.add(listArrayList_size++, quotes_1W);
+            Log.w("Manager", "convertStringToListQuoteChart: " + quotes_1W.size() + " + " + i + " " + listArrayList.get(0).size());
+            List<Quote> quotes_1M = new ArrayList<>();
+            quotes_1M.addAll(quotes_1W);
+            //1 month
+            for (int j = i - 1; j >= 0; j--) {
+                try {
+                    date = FORMAT_DATE.parse(root.get(j).getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendar.setTime(date);
+                if (calendar.get(Calendar.YEAR) == current.get(Calendar.YEAR)
+                        && calendar.get(Calendar.MONTH) == current.get(Calendar.MONTH)) {
+
+                    quotes_1M.add(root.get(j));
+                } else {
+                    i = j;
+                    break;
+                }
+            }
+            listArrayList.add(listArrayList_size++, quotes_1M);
+
+            Log.w("Manager", "convertStringToListQuoteChart: " + quotes_1M.size() + " + " + i);
+//            //3 month
+            List<Quote> quotes_3M = new ArrayList<>();
+            quotes_3M.addAll(quotes_1M);
+            for (int j = i - 1; j >= 0; j--) {
+                try {
+                    date = FORMAT_DATE.parse(root.get(j).getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendar.setTime(date);
+                if (calendar.get(Calendar.YEAR) == current.get(Calendar.YEAR)
+                        && Math.abs(calendar.get(Calendar.MONTH) - current.get(Calendar.MONTH)) <= 3) {
+
+                    quotes_3M.add(root.get(j));
+                } else {
+                    i = j;
+                    break;
+                }
+            }
+            listArrayList.add(listArrayList_size++, quotes_3M);
+//
+
+            //6 month
+            List<Quote> quotes_6M = new ArrayList<>();
+            quotes_6M.addAll(quotes_3M);
+            for (int j = i - 1; j >= 0; j--) {
+                try {
+                    date = FORMAT_DATE.parse(root.get(j).getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendar.setTime(date);
+                if (calendar.get(Calendar.YEAR) == current.get(Calendar.YEAR)
+                        && Math.abs(calendar.get(Calendar.MONTH) - current.get(Calendar.MONTH)) <= 6) {
+
+                    quotes_6M.add(root.get(j));
+                } else {
+                    i = j;
+                    break;
+
+                }
+            }
+            listArrayList.add(listArrayList_size++, quotes_6M);
+            //1 year
+            List<Quote> quotes_1Y = new ArrayList<>();
+            quotes_1Y.addAll(quotes_6M);
+            for (int j = i - 1; j >= 0; j--) {
+                try {
+                    date = FORMAT_DATE.parse(root.get(j).getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendar.setTime(date);
+                if (calendar.get(Calendar.YEAR) == current.get(Calendar.YEAR)) {
+
+                    quotes_1Y.add(root.get(j));
+                } else {
+                    i = j;
+                    break;
+                }
+            }
+            listArrayList.add(listArrayList_size++, quotes_1Y);
+
+            //2 year
+            List<Quote> quotes_2Y = new ArrayList<>();
+            quotes_2Y.addAll(quotes_1Y);
+            for (int j = i - 1; j >= 0; j--) {
+                try {
+                    date = FORMAT_DATE.parse(root.get(j).getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendar.setTime(date);
+                if (Math.abs(calendar.get(Calendar.YEAR) - current.get(Calendar.YEAR)) <= 2) {
+                    quotes_2Y.add(root.get(j));
+                } else {
+                    i = j;
+                    break;
+                }
+            }
+            listArrayList.add(listArrayList_size++, quotes_2Y);
+            //all
+            List<Quote> quotes_ALL = new ArrayList<>();
+            quotes_ALL.addAll(root);
+            for (i = 0; i < listArrayList.size(); i++) {
+                Log.w("Manager", "convertStringToListQuoteChart: " + listArrayList.get(i).size());
+            }
+            listArrayList.add(listArrayList_size++, quotes_ALL);
+        }
+        return listArrayList;
     }
 
     public static int getCByQuoteName(String quoteName) {

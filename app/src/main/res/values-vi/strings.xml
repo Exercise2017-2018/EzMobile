@@ -16,4 +16,5 @@
     <string name="quantity">Số lượng</string>
     <string name="login">Đăng nhập</string>
     <string name="detail_diagram">BIỂU ĐỒ</string>
+    <string name="title_chart">Biểu đồ VNINDEX</string>
 </resources>
